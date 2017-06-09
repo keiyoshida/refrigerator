@@ -7,6 +7,7 @@
   <body>
     <center>
       <h1>購入商品入力画面</h1>
+      <img src="/icon.png" />
       <form method="get" th:action="@{/type}"><p><label>種別:</label>
         <select name="type" style="width:230" onChange="this.form.submit()" >
           <option value="meet" th:selected="${select1} == true">生肉</option>
@@ -19,7 +20,7 @@
       </form>
       <form method="get" th:action="@{/addList}">
         <p><label>商品名:</label><input type="text" name="name" th:value="${goodsName}" /></p>
-        <p><label>参考消費期限:</label><input type="text" name="date" th:value="${limit}" /></p>
+        <p><label>参考消費期限:</label><input type="date" name="date" th:value="${limit}" /></p>
         <p><input type="submit" value="入力完了" /></p>
       </form>
     </center>
