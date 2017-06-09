@@ -3,10 +3,11 @@ package com.example.refrigerator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,8 @@ public class MainController {
     @Autowired
     private JdbcTemplate jdbc;
 
-//    @Value("${app.name}")
-//    private String appName;
-
-    public List<Goods> goods = new ArrayList<Goods>();
+    // @Value("${app.name}")
+    // private String appName;
 
     @GetMapping("/h2")
     public String h2() {
@@ -41,16 +40,7 @@ public class MainController {
     @GetMapping("/test")
     public String test(Model model) {
 
-        try {
-            goods.add(new Goods(1, "肉", "2017/6/7", new SimpleDateFormat("yyyy/MM/dd").parse("2017/6/7")));
-            goods.add(new Goods(2, "魚", "2017/5/20", new SimpleDateFormat("yyyy/MM/dd").parse("2017/5/20")));
-            goods.add(new Goods(3, "野菜", "2017/6/8", new SimpleDateFormat("yyyy/MM/dd").parse("2017/6/8")));
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-
-        printImage(model);
-        model.addAttribute("goodslist", goods);
+        printList(model);
         return "test";
     }
 
@@ -67,10 +57,10 @@ public class MainController {
     @GetMapping("/out")
     public String moveOut(int[] selectGoods, Model model) {
         for (int i = 0; i < selectGoods.length; i++) {
-            System.out.println(selectGoods[i]);
+            jdbc.update("DELETE FROM refrigerator WHERE id = " + selectGoods[i] );
         }
-        printImage(model);
-        model.addAttribute("goodslist", goods);
+
+        printList(model);
         return "test";
     }
 
@@ -84,23 +74,28 @@ public class MainController {
             model.addAttribute("limit", "");
             model.addAttribute("select6", true);
         } else {
+            String types = "";
+            int addDay = 0;
             if (type.equals("meet")) {
-                calendar.add(Calendar.DATE, 3);
-                model.addAttribute("select1", true);
+                addDay = 3;
+                types = "select1";
             } else if (type.equals("fish")) {
-                calendar.add(Calendar.DATE, 2);
-                model.addAttribute("select2", true);
+                addDay = 2;
+                types = "select2";
             } else if (type.equals("vegetable")) {
-                calendar.add(Calendar.DATE, 7);
-                model.addAttribute("select3", true);
+                addDay = 7;
+                types = "select3";
             } else if (type.equals("egg")) {
-                calendar.add(Calendar.DATE, 14);
-                model.addAttribute("select4", true);
+                addDay = 14;
+                types = "select4";
             } else if (type.equals("milk")) {
-                calendar.add(Calendar.DATE, 14);
-                model.addAttribute("select5", true);
+                addDay = 14;
+                types = "select5";
             }
-            model.addAttribute("limit", new SimpleDateFormat("yyyy/MM/dd").format(calendar.getTime()));
+            calendar.add(Calendar.DATE, addDay);
+            model.addAttribute(types, true);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            model.addAttribute("limit", sdf.format(calendar.getTime()));
         }
         return "input";
     }
@@ -111,7 +106,7 @@ public class MainController {
         if (name.equals("") == false && date != null) {
             jdbc.update("INSERT INTO refrigerator (name, limitDay) VALUES ('" + name + "', to_date('" + date
                     + "', 'yyyy/MM/dd'))");
-
+            printList(model);
             return "test";
         } else {
             model.addAttribute("goodsName", name);
@@ -120,7 +115,22 @@ public class MainController {
         }
     }
 
-    public void printImage(Model model) {
+    public void printList(Model model) {
+        List<Goods> goods = new ArrayList<Goods>();
+        List<Map<String, Object>> list = jdbc.queryForList("SELECT id, name, limitDay FROM refrigerator");
+        for (int i = 0; i < list.size(); i++) {
+            int id = Integer.parseInt(((list.get(i)).get("id").toString()));
+            String name = (list.get(i)).get("name").toString();
+            String limit = ((list.get(i).get("limitDay")).toString());
+            Date limitDay = java.sql.Date.valueOf(limit);
+            goods.add(new Goods(id, name, limit, limitDay));
+        }
+
+        printImage(goods, model);
+        model.addAttribute("goodslist", goods);
+    }
+
+    public void printImage(List<Goods> goods, Model model) {
         int count = 0;
         for (int i = 0; i < goods.size(); i++) {
             if (goods.get(i).getLimitDay().compareTo(goods.get(i).getToday()) < 0) {
