@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>冷蔵庫管理アプリケーション</title>
+    <link rel="icon" href="icon.ico" />
+  </head>
+
+  <body>
+    <center>
+      <h1>購入商品入力画面</h1>
+      <form method="get" th:action="@{/type}"><p><label>種別:</label>
+        <select name="type" style="width:230" onChange="this.form.submit()" >
+          <option value="meet" th:selected="${select1} == true">生肉</option>
+          <option value="fish" th:selected="${select2} == true">魚</option>
+          <option value="vegetable" th:selected="${select3} == true">野菜</option>
+          <option value="egg" th:selected="${select4} == true">卵</option>
+          <option value="milk" th:selected="${select5} == true">牛乳</option>
+          <option value="other" th:selected="${select6} == true">その他</option>
+        </select></p>
+      </form>
+      <form method="get" th:action="@{/addList}">
+        <p><label>商品名:</label><input type="text" name="name" th:value="${goodsName}" /></p>
+        <p><label>種別（その他）:</label><input type="text" name="typeText" th:value="${otherGoodsType}" /></p>
+        <p><label>参考消費期限:</label><input type="text" name="date" th:value="${limit}" /></p>
+        <p><input type="submit" value="入力完了" /></p>
+      </form>
+      <form mothod="get" th:action="@{/plus}">
+      <input type="text" name="num1" th:value="${num1}" />
+      <input type="text" name="num2" th:value="${num2}" />
+      <input type="text" name="num3" th:value="${num3}" />
+      <input type="submit" value="テスト" />
+      <p><input type="text" name="num4" th:value="${num4}" /></p>
+      </form>
+    </center>
+  </body>
+</html>
