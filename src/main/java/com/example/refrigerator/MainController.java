@@ -1,9 +1,7 @@
 package com.example.refrigerator;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +32,15 @@ public class MainController {
 
         // insert update delete
         // jdbc.update("INSERT INTO person VALUES (34, 'tanaka', 54)");
-        return "test";
+        return "top";
     }
 
-    @GetMapping("/test")
-    public String test(Model model) {
+    @GetMapping("/top")
+    public String top(Model model) {
 
-        printList(model);
-        return "test";
+        String qry = "SELECT id, name, limitDay FROM refrigerator";
+        printList(qry, model);
+        return "top";
     }
 
     @GetMapping("/input")
@@ -56,19 +55,51 @@ public class MainController {
 
     @GetMapping("/out")
     public String moveOut(int[] selectGoods, Model model) {
+
+        String qry = "SELECT id, name, limitDay FROM refrigerator";
         for (int i = 0; i < selectGoods.length; i++) {
-            jdbc.update("DELETE FROM refrigerator WHERE id = " + selectGoods[i] );
+            jdbc.update("DELETE FROM refrigerator WHERE id = " + selectGoods[i]);
         }
 
-        printList(model);
-        return "test";
+        printList(qry, model);
+        return "top";
+    }
+
+    @GetMapping("/search")
+    public String searchURL(Model model) {
+        String url = "https://cookpad.com/search/";
+        String qry = "SELECT id, name, limitDay FROM refrigerator";
+        printList(qry, model);
+        model.addAttribute("url", url);
+        return "search";
+    }
+
+    @GetMapping("/selectSearch")
+    public String selectSearch(int[] selectGoods, Model model) {
+        String url = "https://cookpad.com/search/";
+        String qry = "SELECT id, name, limitDay FROM refrigerator";
+        String name = "";
+        String urlText = "";
+        printList(qry, model);
+        if (selectGoods != null) {
+            name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = " + selectGoods[0])).get(0).get("name")
+                    .toString();
+            url = url + name;
+            urlText = name;
+            for (int i = 1; i < selectGoods.length; i++) {
+                name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = " + selectGoods[i])).get(0)
+                        .get("name").toString();
+                url = url + "%20" + name;
+                urlText = urlText + "," + name;
+            }
+            model.addAttribute("urlText", urlText + "を使ったレシピ");
+        }
+        model.addAttribute("url", url);
+        return "search";
     }
 
     @GetMapping("/type")
     public String selectType(String type, Model model) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(calendar.getTime());
 
         if (type.equals("other")) {
             model.addAttribute("limit", "");
@@ -92,10 +123,9 @@ public class MainController {
                 addDay = 14;
                 types = "select5";
             }
-            calendar.add(Calendar.DATE, addDay);
+            LocalDate date = LocalDate.now().plusDays(addDay);
             model.addAttribute(types, true);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            model.addAttribute("limit", sdf.format(calendar.getTime()));
+            model.addAttribute("limit", date);
         }
         return "input";
     }
@@ -103,31 +133,21 @@ public class MainController {
     @GetMapping("/addList")
     public String addList(String name, String date, Model model) {
 
-        if (name.equals("") == false && date != null) {
+        String qry = "SELECT id, name, limitDay FROM refrigerator";
+        if (name.equals("") != false || date.equals("") != false) {
+            model.addAttribute("goodsName", name);
+            model.addAttribute("alert", "未入力項目があります。");
+            return "input";
+        } else if (name.indexOf("'") != -1 || name.indexOf('"') != -1 || name.indexOf("=") != -1
+                || name.indexOf("”") != -1 || name.indexOf("’") != -1) {
+            model.addAttribute("alert", "登録出来ない文字が含まれています。");
+            return "input";
+        } else {
             jdbc.update("INSERT INTO refrigerator (name, limitDay) VALUES ('" + name + "', to_date('" + date
                     + "', 'yyyy/MM/dd'))");
-            printList(model);
-            return "test";
-        } else {
-            model.addAttribute("goodsName", name);
-            model.addAttribute("limit", date);
-            return "input";
+            printList(qry, model);
+            return "top";
         }
-    }
-
-    public void printList(Model model) {
-        List<Goods> goods = new ArrayList<Goods>();
-        List<Map<String, Object>> list = jdbc.queryForList("SELECT id, name, limitDay FROM refrigerator");
-        for (int i = 0; i < list.size(); i++) {
-            int id = Integer.parseInt(((list.get(i)).get("id").toString()));
-            String name = (list.get(i)).get("name").toString();
-            String limit = ((list.get(i).get("limitDay")).toString());
-            Date limitDay = java.sql.Date.valueOf(limit);
-            goods.add(new Goods(id, name, limit, limitDay));
-        }
-
-        printImage(goods, model);
-        model.addAttribute("goodslist", goods);
     }
 
     public void printImage(List<Goods> goods, Model model) {
@@ -143,5 +163,31 @@ public class MainController {
         } else {
             model.addAttribute("path", "normal.png");
         }
+    }
+
+    public void printList(String qry, Model model) {
+        List<Goods> goods = new ArrayList<Goods>();
+        List<Map<String, Object>> list = jdbc.queryForList(qry);
+        for (int i = 0; i < list.size(); i++) {
+            int id = Integer.parseInt(((list.get(i)).get("id").toString()));
+            String name = (list.get(i)).get("name").toString();
+            String limit = ((list.get(i).get("limitDay")).toString());
+            LocalDate limitDay = LocalDate.parse(limit);
+            LocalDate today = LocalDate.now();
+            int state = 0;
+            if (limitDay.minusDays(1).equals(today)) {
+                state = 1;
+            } else if (limitDay.equals(today)) {
+                state = 2;
+            } else if (limitDay.compareTo(today) < 0) {
+                state = 3;
+            } else {
+                state = 0;
+            }
+            goods.add(new Goods(id, name, limit, limitDay, state));
+        }
+
+        printImage(goods, model);
+        model.addAttribute("goodslist", goods);
     }
 }
