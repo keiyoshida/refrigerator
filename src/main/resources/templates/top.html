@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>冷蔵庫管理アプリケーション</title>
+    <link rel="icon" href="icon.ico" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous" />
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <center>
+      <h1>冷蔵庫管理アプリケーション</h1>
+      <img th:src="${path}" width="50%" height="50%" />
+      <h2>冷蔵庫の中身</h2>
+      <p><form method="get" th:action="@{/search}"><input type="submit" value="レシピ検索" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></form></p>
+      <p><form method="get" th:action="@{/in}"><input type="submit" value="購入商品入力画面" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></form></p>
+      <form method="get" th:action="@{/out}"><input type="submit" value="取り出し" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" />
+      <p></p>
+      <div class="container" >
+        <table width="500" class="table table-bordered" id="refrigerator" >
+          <thead>
+            <tr align="center" >
+              <th class="col-md-2" >選択</th>
+              <th class="col-md-5" >商品名</th>
+              <th class="col-md-5" >消費期限</th>
+            </tr>
+          </thead>
+          <tr th:each="goods : ${goodslist}">
+            <td align="center">
+              <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
+            </td>
+            <td th:text="${goods.name}"></td>
+            <div th:switch="${goods.state}">
+              <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
+              <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
+              <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
+              <td th:case="*" th:text="${goods.limit}"></td>
+            </div>
+          </tr>
+        </table>
+      </div>
+      </form>
+    </center>
+    <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+  </body>
+</html>

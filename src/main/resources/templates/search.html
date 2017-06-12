@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>冷蔵庫管理アプリケーション</title>
+    <link rel="icon" href="icon.ico" />
+  </head>
+
+  <body>
+    <center>
+      <h1>レシピ検索画面</h1>
+      <form method="get" th:action="@{/selectSearch}">
+        <table id="refrigerator" border="1" width="500">
+          <tr th:each="goods : ${goodslist}">
+            <td>
+              <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
+            </td>
+            <td th:text="${goods.name}"></td>
+            <div th:switch="${goods.state}">
+              <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
+              <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
+              <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
+              <td th:case="*" th:text="${goods.limit}"></td>
+            </div>
+          </tr>
+        </table>
+        <p><input type="submit" value="URLを作成" style="WIDTH: 200px; HEIGHT: 30px" /></p>
+        <p><a target="_blank" th:href="${url}" ><span th:text="${urlText}"></span></a></p>
+      </form>
+    </center>
+  </body>
+</html>
