@@ -19,7 +19,12 @@
     <center>
       <h1>レシピ検索画面</h1>
       <form method="post" th:action="@{/selectSearch}">
-        <table id="refrigerator" border="1" width="500">
+        <table style="width:800" class="table table-bordered" id="refrigerator" >
+          <tr align="center" class="success">
+            <th class="col-md-2" >選択</th>
+            <th class="col-md-5" >商品名</th>
+            <th class="col-md-5" >消費期限</th>
+          </tr>
           <tr th:each="goods : ${goodslist}">
             <td>
               <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
@@ -33,7 +38,7 @@
             </div>
           </tr>
         </table>
-        <p><input type="submit" value="URLを作成" style="WIDTH: 200px; HEIGHT: 30px" /></p>
+        <p><input type="submit" value="URLを作成" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></p>
         <p><a target="_blank" th:href="${url}" ><span th:text="${urlText}"></span></a></p>
       </form>
       <form method="post" th:action="@{/returnTop}">
