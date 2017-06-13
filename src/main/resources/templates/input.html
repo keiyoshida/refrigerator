@@ -19,9 +19,9 @@
     <center>
       <h1>購入商品入力画面</h1>
       <p><img src="/icon.png" /></p>
-      <form method="get" th:action="@{/type}">
+      <form method="post" th:action="@{/type}">
         <p><label>種別:</label>
-        <select class="form-control" name="type" style="width:200" onChange="this.form.submit()" >
+        <select class="form-control" name="type" style="width:300" onChange="this.form.submit()" >
           <option value="meet" th:selected="${select1} == true">生肉</option>
           <option value="fish" th:selected="${select2} == true">魚</option>
           <option value="vegetable" th:selected="${select3} == true">野菜</option>
@@ -30,11 +30,16 @@
           <option value="other" th:selected="${select6} == true">その他</option>
         </select></p>
       </form>
-      <form method="get" th:action="@{/addList}">
-        <p><label>商品名:</label><input class="form-control" type="text" name="name" th:value="${goodsName}" /></p>
-        <p><label>参考消費期限:</label><input class="form-control" type="date" name="date" th:value="${limit}" /></p>
-        <p><input type="submit" value="入力完了" /></p>
-        <p><sapn style="color:#FF0000;" th:text="${alert}" /></p>
+      <div class="container" >
+        <form method="post" th:action="@{/addList}">
+          <p><label>商品名:</label><input class="form-control" type="text" name="name" th:value="${goodsName}" style="width:300" /></p>
+          <p><label>参考消費期限:</label><input class="form-control" type="date" name="date" th:value="${limit}" style="width:300" /></p>
+          <p><input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="入力完了" /></p>
+          <p><sapn style="color:#FF0000;" th:text="${alert}" /></p>
+        </form>
+      </div>
+      <form method="post" th:action="@{/returnTop}">
+        <input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="Top" />
       </form>
     </center>
     <script
