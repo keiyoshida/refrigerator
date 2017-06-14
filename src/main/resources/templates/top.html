@@ -16,7 +16,7 @@
     <![endif]-->
 
   </head>
-  
+
   <body>
     <center>
       <h1>冷蔵庫管理アプリケーション</h1>
@@ -41,8 +41,8 @@
                 <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
               </td>
               <td th:text="${goods.name}"></td>
-              <div th:switch="${goods.state}">
-                <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
+              <div id="dateCheck" th:switch="${goods.state}">
+                <td th:case="1" bgcolor="Yellow" th:text="${goods.limit}"></td>
                 <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
                 <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
                 <td th:case="*" th:text="${goods.limit}"></td>
@@ -60,23 +60,33 @@
     /*<![CDATA[*/
       $(function(){
           $('.goodsName').click(function(){
-              var table = document.getElementsByTagName('table').item(0);
-              var i = 1;
-              var j = 0;
-              var length = table.rows.length;
-              console.log(table.rows[1].cells[1].innerText);
-              for(row in table.rows[0]){
-                  if(i == length-1){
-                      break;
-                  }
-                  /*for(cell in row.item(i)){
-                      console.log(cell.cells.item(j));
-                      j++;
-                  }*/
-                  i++;
+        	  var table = document.getElementById("refrigerator");
+              var array = makeArray();
+              array.sort(function(a, b){
+                  if(a.name < b.name) return -1;
+                  if(a.name > b.name) return 1;
+                  return 0;
+              });
+              
+              while(table.rows.length != 1){
+            	  table.deleteRow(-1);
               }
           });
       });
+
+    var makeArray = function(){
+        var array = [];
+        var table = document.getElementById("refrigerator");
+        for(var i=1;i<table.rows.length;i++){
+            var object = new Object();
+            object.name = table.rows[i].cells[1].innerText;
+            object.date = table.rows[i].cells[2].innerText;
+            object.textHTML = table.rows[i].innerHTML;
+            array.push(object);
+        }
+        return array;
+    }
+
     /*]]>*/
     </script>
     <script
