@@ -71,6 +71,12 @@
               while(table.rows.length != 1){
             	  table.deleteRow(-1);
               }
+              
+              for(var i=0;i<array.length;i++){
+            	  var row = table.insertRow(-1);
+            	  var cell1 = row.
+            	  console.log(array[i].textHTML);
+              }
           });
       });
 
@@ -81,7 +87,7 @@
             var object = new Object();
             object.name = table.rows[i].cells[1].innerText;
             object.date = table.rows[i].cells[2].innerText;
-            object.textHTML = table.rows[i].innerHTML;
+            object.textHTML = table.rows[i].cells[0].innerHTML;
             array.push(object);
         }
         return array;
