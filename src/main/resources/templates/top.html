@@ -14,13 +14,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script
-        src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="jquery.tablesorter.js"></script>
-    <script>
-    /*<![CDATA[*/
-    /*]]>*/
-    </script>
+
   </head>
   
   <body>
@@ -37,22 +31,24 @@
           <thead>
             <tr align="center" class="success">
               <th class="col-md-2" >選択</th>
-              <th class="col-md-5" >商品名</th>
-              <th class="col-md-5" >消費期限</th>
+              <th class="col-md-5 goodsName" >商品名</th>
+              <th class="col-md-5 limitDay" >消費期限</th>
             </tr>
           </thead>
-          <tr th:each="goods : ${goodslist}">
-            <td align="center">
-              <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
-            </td>
-            <td th:text="${goods.name}"></td>
-            <div th:switch="${goods.state}">
-              <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
-              <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
-              <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
-              <td th:case="*" th:text="${goods.limit}"></td>
-            </div>
-          </tr>
+          <tbody>
+            <tr th:each="goods : ${goodslist}">
+              <td align="center">
+                <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
+              </td>
+              <td th:text="${goods.name}"></td>
+              <div th:switch="${goods.state}">
+                <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
+                <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
+                <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
+                <td th:case="*" th:text="${goods.limit}"></td>
+              </div>
+            </tr>
+          </tbody>
         </table>
         <span style="color:#FF0000;" th:text="${alert}"></span>
       </div>
@@ -60,6 +56,29 @@
     </center>
     <script
         src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+      $(function(){
+          $('.goodsName').click(function(){
+              var table = document.getElementsByTagName('table').item(0);
+              var i = 1;
+              var j = 0;
+              var length = table.rows.length;
+              console.log(table.rows[1].cells[1].innerText);
+              for(row in table.rows[0]){
+                  if(i == length-1){
+                      break;
+                  }
+                  /*for(cell in row.item(i)){
+                      console.log(cell.cells.item(j));
+                      j++;
+                  }*/
+                  i++;
+              }
+          });
+      });
+    /*]]>*/
+    </script>
     <script
         src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
