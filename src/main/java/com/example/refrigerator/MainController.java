@@ -35,6 +35,12 @@ public class MainController {
         return "top";
     }
 
+    @GetMapping("/test")
+    public String test(){
+        System.out.println("check");
+        return "top";
+    }
+
     @GetMapping("/input")
     public String input(Model model) {
         return "input";
@@ -83,21 +89,23 @@ public class MainController {
 
     @PostMapping("/selectSearch")
     public String selectSearch(int[] selectGoods, RedirectAttributes attr) {
-        String url = "https://cookpad.com/search/";
+        StringBuffer url = new StringBuffer("https://cookpad.com/search/");
+        StringBuffer urlText;
         String qry = "SELECT id, name, limitDay FROM refrigerator";
         String name = "";
-        String urlText = "";
         postPrintList(qry, attr);
         if (selectGoods != null) {
             name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[0])).get(0).get("name")
                     .toString();
-            url = url + name;
-            urlText = name;
+            url.append(name);
+            urlText = new StringBuffer(name);
             for (int i = 1; i < selectGoods.length; i++) {
                 name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[i])).get(0)
                         .get("name").toString();
-                url = url + "%20" + name;
-                urlText = urlText + "," + name;
+                url.append("%20");
+                url.append(name);
+                urlText.append(",");
+                urlText.append(name);
             }
             attr.addFlashAttribute("urlText", urlText + "を使ったレシピ");
         }
