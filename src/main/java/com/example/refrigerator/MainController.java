@@ -18,9 +18,19 @@ public class MainController {
 
     @Autowired
     private JdbcTemplate jdbc;
+    
+    @Autowired
+    private RefrigeratorDao refrigeratorDao;
 
     // @Value("${app.name}")
     // private String appName;
+    
+    @GetMapping("/test")
+    public String test(){
+        System.out.println(refrigeratorDao.findById(2));
+
+        return "";
+    }
 
     /**
      * (/top)にアクセスしたときにトップ画面を表示する。
@@ -32,12 +42,6 @@ public class MainController {
 
         String qry = "SELECT id, name, limitDay FROM refrigerator";
         getPrintList(qry, model);
-        return "top";
-    }
-
-    @GetMapping("/test")
-    public String test(){
-        System.out.println("check");
         return "top";
     }
 
