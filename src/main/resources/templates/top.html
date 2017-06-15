@@ -31,8 +31,8 @@
           <thead>
             <tr align="center" class="success">
               <th class="col-md-2" >選択</th>
-              <th class="col-md-5 goodsName" >商品名</th>
-              <th class="col-md-5 limitDay" >消費期限</th>
+              <th class="col-md-5 goodsName" onclick="clickName()" >商品名</th>
+              <th class="col-md-5 limitDay" onclick="clickLimit()" >消費期限</th>
             </tr>
           </thead>
           <tbody>
@@ -41,7 +41,7 @@
                 <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
               </td>
               <td th:text="${goods.name}"></td>
-              <div id="dateCheck" th:switch="${goods.state}">
+              <div th:switch="${goods.state}">
                 <td th:case="1" bgcolor="Yellow" th:text="${goods.limit}"></td>
                 <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
                 <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
@@ -58,27 +58,117 @@
         src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript">
     /*<![CDATA[*/
-      $(function(){
-          $('.goodsName').click(function(){
-        	  var table = document.getElementById("refrigerator");
+    var clickName = function(){
+        var table = document.getElementById("refrigerator");
+        var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
+        var array = makeArray();
+
+        if(tableHTML.indexOf("消費期限▼") != -1) tableHTML = tableHTML.replace("▼", "");
+        else if(tableHTML.indexOf("消費期限▲") != -1) tableHTML = tableHTML.replace("▲", "");
+
+        if(tableHTML.indexOf("▼") != -1){
+            tableHTML = tableHTML.replace(/▼/g, "▲");
+            array.sort(function(a, b){
+                if(a.name < b.name) return 1;
+                if(a.name > b.name) return -1;
+                return 0;
+            });
+        } else{
+            if(tableHTML.indexOf("商品名▲") != -1){
+                tableHTML = tableHTML.replace(/▲/g, "▼");
+            } else {
+                tableHTML = tableHTML.replace(/商品名/g, "商品名▼");
+            }
+            array.sort(function(a, b){
+                if(a.name < b.name) return -1;
+                if(a.name > b.name) return 1;
+                return 0;
+            });
+        }
+        
+        while(table.rows.length != 1){
+            table.deleteRow(-1);
+        }
+
+        table.tHead.innerHTML = tableHTML;
+        tableHTML = "";
+        for(var i=0;i<array.length;i++){
+            table.innerHTML += array[i].textHTML;
+        }
+    }
+    
+    var clickLimit = function(){
+        var table = document.getElementById("refrigerator");
+        var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
+        var array = makeArray();
+
+        if(tableHTML.indexOf("商品名▼") != -1) tableHTML = tableHTML.replace("▼", "");
+        else if(tableHTML.indexOf("商品名▲") != -1) tableHTML = tableHTML.replace("▲", "");
+
+        if(tableHTML.indexOf("▼") != -1){
+            tableHTML = tableHTML.replace(/▼/g, "▲");
+            array.sort(function(a, b){
+                if(a.date < b.date) return 1;
+                if(a.date > b.date) return -1;
+                return 0;
+            });
+        } else{
+            if(tableHTML.indexOf("消費期限▲") != -1){
+                tableHTML = tableHTML.replace(/▲/g, "▼");
+            } else {
+                tableHTML = tableHTML.replace(/消費期限/g, "消費期限▼");
+            }
+            array.sort(function(a, b){
+                if(a.date < b.date) return -1;
+                if(a.date > b.date) return 1;
+                return 0;
+            });
+        }
+        
+        while(table.rows.length != 1){
+            table.deleteRow(-1);
+        }
+
+        table.tHead.innerHTML = tableHTML;
+        tableHTML = "";
+        for(var i=0;i<array.length;i++){
+            table.innerHTML += array[i].textHTML;
+        }
+    }
+        /*$('.goodsName').click(function(){
+              var table = document.getElementById("refrigerator");
+              var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
               var array = makeArray();
-              array.sort(function(a, b){
-                  if(a.name < b.name) return -1;
-                  if(a.name > b.name) return 1;
-                  return 0;
-              });
-              
-              while(table.rows.length != 1){
-            	  table.deleteRow(-1);
+
+              if(tableHTML.indexOf("▼") != -1){
+            	  console.log("check▲");
+                  tableHTML = tableHTML.replace(/▼/g, "▲");
+                  array.sort(function(a, b){
+                      if(a.name < b.name) return 1;
+                      if(a.name > b.name) return -1;
+                      return 0;
+                  });
+              } else{
+                  console.log("check▼");
+                  tableHTML = tableHTML.replace(/商品名/g, "商品名▼");
+                  array.sort(function(a, b){
+                      if(a.name < b.name) return -1;
+                      if(a.name > b.name) return 1;
+                      return 0;
+                  });
               }
-              
+
+              while(table.rows.length != 0){
+                  table.deleteRow(-1);
+              }
+
+              console.log(tableHTML);
               for(var i=0;i<array.length;i++){
-            	  var row = table.insertRow(-1);
-            	  var cell1 = row.
-            	  console.log(array[i].textHTML);
+                  tableHTML += array[i].textHTML;
               }
-          });
-      });
+              table.innerHTML = tableHTML;
+              console.log(tableHTML);
+          });*/
 
     var makeArray = function(){
         var array = [];
@@ -87,7 +177,7 @@
             var object = new Object();
             object.name = table.rows[i].cells[1].innerText;
             object.date = table.rows[i].cells[2].innerText;
-            object.textHTML = table.rows[i].cells[0].innerHTML;
+            object.textHTML = "<tr>" + table.rows[i].innerHTML + "</tr>";
             array.push(object);
         }
         return array;
