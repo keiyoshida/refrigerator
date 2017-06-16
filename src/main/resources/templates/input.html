@@ -31,7 +31,7 @@
         </select></p>
       </form>
       <div class="container" >
-        <form method="post" th:action="@{/addList}">
+        <form method="post" th:action="@{/addGoods}">
           <p><label>商品名:</label><input class="form-control" type="text" name="name" th:value="${goodsName}" style="width:300" /></p>
           <p><label>参考消費期限:</label><input class="form-control" type="date" name="date" th:value="${limit}" style="width:300" /></p>
           <p><input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="入力完了" /></p>

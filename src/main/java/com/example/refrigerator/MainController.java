@@ -149,9 +149,11 @@ public class MainController {
         return "redirect:/input";
     }
 
-    @PostMapping("/addList")
-    public String addList(String name, String date, RedirectAttributes attr) {
+    @PostMapping("/addGoods")
+    public String addGoods(AddGoodsForm form, RedirectAttributes attr) {
 
+        String name = form.getName();
+        String date = form.getDate();
         String qry = "SELECT id, name, limitDay FROM refrigerator";
         if (name.equals("") != false || date.equals("") != false) {
             attr.addFlashAttribute("goodsName", name);
