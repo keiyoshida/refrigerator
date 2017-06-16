@@ -6,6 +6,7 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous" />
+    <script type="text/javascript" src="sortable/sortable.js"></script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,25 +20,31 @@
     <center>
       <h1>レシピ検索画面</h1>
       <form method="post" th:action="@{/selectSearch}">
-        <table style="width:800" class="table table-bordered" id="refrigerator" >
-          <tr align="center" class="success">
-            <th class="col-md-2" >選択</th>
-            <th class="col-md-5" >商品名</th>
-            <th class="col-md-5" >消費期限</th>
-          </tr>
-          <tr th:each="goods : ${goodslist}">
-            <td>
-              <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
-            </td>
-            <td th:text="${goods.name}"></td>
-            <div th:switch="${goods.state}">
-              <td th:case="1" bgcolor="yellow" th:text="${goods.limit}"></td>
-              <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
-              <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
-              <td th:case="*" th:text="${goods.limit}"></td>
-            </div>
-          </tr>
+      <div class="container" >
+        <table style="width:800" class="table table-bordered sortable" id="refrigerator" >
+          <thead>
+            <tr align="center" class="success">
+              <th class="col-md-2 unsortable" >選択</th>
+              <th class="col-md-5 goodsName" >商品名</th>
+              <th class="col-md-5 limitDay" >消費期限</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="goods : ${goodslist}">
+              <td align="center">
+                <input type="checkbox" name="selectGoods" value="true" th:value="${goods.id}" />
+              </td>
+              <td th:text="${goods.name}"></td>
+              <div th:switch="${goods.state}">
+                <td th:case="1" bgcolor="Yellow" th:text="${goods.limit}"></td>
+                <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
+                <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
+                <td th:case="*" th:text="${goods.limit}"></td>
+              </div>
+            </tr>
+          </tbody>
         </table>
+        </div>
         <p><input type="submit" value="URLを作成" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></p>
         <p><a target="_blank" th:href="${url}" ><span th:text="${urlText}"></span></a></p>
       </form>
@@ -45,6 +52,11 @@
         <input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="Top" />
       </form>
     </center>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+               
+    /*]]>*/
+    </script>
     <script
         src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script

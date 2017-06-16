@@ -7,6 +7,7 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous" />
+    <script type="text/javascript" src="sortable/sortable.js"></script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,12 +28,12 @@
       <form method="post" th:action="@{/out}"><input type="submit" value="取り出し" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" />
       <p></p>
       <div class="container" >
-        <table style="width:800" class="table table-bordered" id="refrigerator" >
+        <table style="width:800" class="table table-bordered sortable" id="refrigerator" >
           <thead>
             <tr align="center" class="success">
-              <th class="col-md-2" >選択</th>
-              <th class="col-md-5 goodsName" onclick="clickName()" >商品名</th>
-              <th class="col-md-5 limitDay" onclick="clickLimit()" >消費期限</th>
+              <th class="col-md-2 unsortable" >選択</th>
+              <th class="col-md-5 goodsName" >商品名</th>
+              <th class="col-md-5 limitDay" >消費期限</th>
             </tr>
           </thead>
           <tbody>
@@ -56,135 +57,6 @@
     </center>
     <script
         src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type="text/javascript">
-    /*<![CDATA[*/
-    var clickName = function(){
-        var table = document.getElementById("refrigerator");
-        var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
-        var array = makeArray();
-
-        if(tableHTML.indexOf("消費期限▼") != -1) tableHTML = tableHTML.replace("▼", "");
-        else if(tableHTML.indexOf("消費期限▲") != -1) tableHTML = tableHTML.replace("▲", "");
-
-        if(tableHTML.indexOf("▼") != -1){
-            tableHTML = tableHTML.replace(/▼/g, "▲");
-            array.sort(function(a, b){
-                if(a.name < b.name) return 1;
-                if(a.name > b.name) return -1;
-                return 0;
-            });
-        } else{
-            if(tableHTML.indexOf("商品名▲") != -1){
-                tableHTML = tableHTML.replace(/▲/g, "▼");
-            } else {
-                tableHTML = tableHTML.replace(/商品名/g, "商品名▼");
-            }
-            array.sort(function(a, b){
-                if(a.name < b.name) return -1;
-                if(a.name > b.name) return 1;
-                return 0;
-            });
-        }
-        
-        while(table.rows.length != 1){
-            table.deleteRow(-1);
-        }
-
-        table.tHead.innerHTML = tableHTML;
-        tableHTML = "";
-        for(var i=0;i<array.length;i++){
-            table.innerHTML += array[i].textHTML;
-        }
-    }
-    
-    var clickLimit = function(){
-        var table = document.getElementById("refrigerator");
-        var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
-        var array = makeArray();
-
-        if(tableHTML.indexOf("商品名▼") != -1) tableHTML = tableHTML.replace("▼", "");
-        else if(tableHTML.indexOf("商品名▲") != -1) tableHTML = tableHTML.replace("▲", "");
-
-        if(tableHTML.indexOf("▼") != -1){
-            tableHTML = tableHTML.replace(/▼/g, "▲");
-            array.sort(function(a, b){
-                if(a.date < b.date) return 1;
-                if(a.date > b.date) return -1;
-                return 0;
-            });
-        } else{
-            if(tableHTML.indexOf("消費期限▲") != -1){
-                tableHTML = tableHTML.replace(/▲/g, "▼");
-            } else {
-                tableHTML = tableHTML.replace(/消費期限/g, "消費期限▼");
-            }
-            array.sort(function(a, b){
-                if(a.date < b.date) return -1;
-                if(a.date > b.date) return 1;
-                return 0;
-            });
-        }
-        
-        while(table.rows.length != 1){
-            table.deleteRow(-1);
-        }
-
-        table.tHead.innerHTML = tableHTML;
-        tableHTML = "";
-        for(var i=0;i<array.length;i++){
-            table.innerHTML += array[i].textHTML;
-        }
-    }
-        /*$('.goodsName').click(function(){
-              var table = document.getElementById("refrigerator");
-              var tableHTML = '<tr align="center" class="success">' + table.rows[0].innerHTML + "</tr>";
-              var array = makeArray();
-
-              if(tableHTML.indexOf("▼") != -1){
-            	  console.log("check▲");
-                  tableHTML = tableHTML.replace(/▼/g, "▲");
-                  array.sort(function(a, b){
-                      if(a.name < b.name) return 1;
-                      if(a.name > b.name) return -1;
-                      return 0;
-                  });
-              } else{
-                  console.log("check▼");
-                  tableHTML = tableHTML.replace(/商品名/g, "商品名▼");
-                  array.sort(function(a, b){
-                      if(a.name < b.name) return -1;
-                      if(a.name > b.name) return 1;
-                      return 0;
-                  });
-              }
-
-              while(table.rows.length != 0){
-                  table.deleteRow(-1);
-              }
-
-              console.log(tableHTML);
-              for(var i=0;i<array.length;i++){
-                  tableHTML += array[i].textHTML;
-              }
-              table.innerHTML = tableHTML;
-              console.log(tableHTML);
-          });*/
-
-    var makeArray = function(){
-        var array = [];
-        var table = document.getElementById("refrigerator");
-        for(var i=1;i<table.rows.length;i++){
-            var object = new Object();
-            object.name = table.rows[i].cells[1].innerText;
-            object.date = table.rows[i].cells[2].innerText;
-            object.textHTML = "<tr>" + table.rows[i].innerHTML + "</tr>";
-            array.push(object);
-        }
-        return array;
-    }
-
-    /*]]>*/
-    </script>
     <script
         src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
