@@ -20,4 +20,12 @@ public class RefrigeratorDao {
     public List<Map<String, Object>> findById(int id){
         return jdbc.queryForList("SELECT * FROM refrigerator WHERE id = ?", id);
     }
+    
+    public void deleteById(int id){
+        jdbc.update("DELETE FROM refrigerator WHERE id = ?", id);
+    }
+    
+    public void insertGoods(String name, String date){
+        jdbc.update("INSERT INTO refrigerator (name, limitDay) VALUES (?, to_date(?, 'yyyy/MM/dd'))", name, date);
+    }
 }

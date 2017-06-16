@@ -39,9 +39,7 @@ public class MainController {
      */
     @GetMapping("/top")
     public String top(Model model) {
-
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
-        getPrintList(qry, model);
+        getPrintList(refrigeratorDao.findAll(), model);
         return "top";
     }
 
@@ -52,8 +50,7 @@ public class MainController {
 
     @GetMapping("/search")
     public String search(Model model) {
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
-        getPrintList(qry, model);
+        getPrintList(refrigeratorDao.findAll(), model);
         return "search";
     }
 
@@ -69,25 +66,22 @@ public class MainController {
 
     @PostMapping("/out")
     public String moveOut(int[] selectGoods, RedirectAttributes attr) {
-
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
         
         if(selectGoods != null){
             for(int i = 0; i < selectGoods.length; i++) {
-                jdbc.update("DELETE FROM refrigerator WHERE id = ?", selectGoods[i]);
+                refrigeratorDao.deleteById(selectGoods[i]);
             }
         } else{
             attr.addFlashAttribute("alert", "取り出す項目を選択してください。");
         }
 
-        postPrintList(qry, attr);
+        postPrintList(refrigeratorDao.findAll(), attr);
         return "redirect:/top";
     }
 
     @PostMapping("/searchForm")
     public String searchForm(RedirectAttributes attr) {
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
-        postPrintList(qry, attr);
+        postPrintList(refrigeratorDao.findAll(), attr);
         return "redirect:/search";
     }
 
@@ -95,9 +89,8 @@ public class MainController {
     public String selectSearch(int[] selectGoods, RedirectAttributes attr) {
         StringBuffer url = new StringBuffer("https://cookpad.com/search/");
         StringBuffer urlText;
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
         String name = "";
-        postPrintList(qry, attr);
+        postPrintList(refrigeratorDao.findAll(), attr);
         if (selectGoods != null) {
             name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[0])).get(0).get("name")
                     .toString();
@@ -154,7 +147,6 @@ public class MainController {
 
         String name = form.getName();
         String date = form.getDate();
-        String qry = "SELECT id, name, limitDay FROM refrigerator";
         if (name.equals("") != false || date.equals("") != false) {
             attr.addFlashAttribute("goodsName", name);
             attr.addFlashAttribute("alert", "未入力項目があります。");
@@ -164,8 +156,8 @@ public class MainController {
             attr.addFlashAttribute("alert", "登録出来ない文字が含まれています。");
             return "redirect:/input";
         } else {
-            jdbc.update("INSERT INTO refrigerator (name, limitDay) VALUES (?, to_date(?, 'yyyy/MM/dd'))", name, date);
-            postPrintList(qry, attr);
+            refrigeratorDao.insertGoods(name, date);
+            postPrintList(refrigeratorDao.findAll(), attr);
             return "redirect:/top";
         }
     }
@@ -185,9 +177,8 @@ public class MainController {
         }
     }
 
-    public void getPrintList(String qry, Model model) {
+    public void getPrintList(List<Map<String, Object>> list, Model model) {
         List<Goods> goods = new ArrayList<Goods>();
-        List<Map<String, Object>> list = jdbc.queryForList(qry);
         for (int i = 0; i < list.size(); i++) {
             int id = Integer.parseInt(((list.get(i)).get("id").toString()));
             String name = (list.get(i)).get("name").toString();
@@ -211,9 +202,8 @@ public class MainController {
         model.addAttribute("goodslist", goods);
     }
 
-    public void postPrintList(String qry, RedirectAttributes attr) {
+    public void postPrintList(List<Map<String, Object>> list, RedirectAttributes attr) {
         List<Goods> goods = new ArrayList<Goods>();
-        List<Map<String, Object>> list = jdbc.queryForList(qry);
         for (int i = 0; i < list.size(); i++) {
             int id = Integer.parseInt(((list.get(i)).get("id").toString()));
             String name = (list.get(i)).get("name").toString();
