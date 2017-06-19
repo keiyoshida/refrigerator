@@ -3,10 +3,8 @@ package com.example.refrigerator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,20 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MainController {
 
     @Autowired
-    private JdbcTemplate jdbc;
-    
-    @Autowired
     private RefrigeratorDao refrigeratorDao;
 
     // @Value("${app.name}")
     // private String appName;
-    
-    @GetMapping("/test")
-    public String test(){
-        System.out.println(refrigeratorDao.findById(2));
-
-        return "";
-    }
 
     /**
      * (/top)にアクセスしたときにトップ画面を表示する。
@@ -75,13 +63,11 @@ public class MainController {
             attr.addFlashAttribute("alert", "取り出す項目を選択してください。");
         }
 
-        postPrintList(refrigeratorDao.findAll(), attr);
         return "redirect:/top";
     }
 
     @PostMapping("/searchForm")
     public String searchForm(RedirectAttributes attr) {
-        postPrintList(refrigeratorDao.findAll(), attr);
         return "redirect:/search";
     }
 
@@ -90,15 +76,13 @@ public class MainController {
         StringBuffer url = new StringBuffer("https://cookpad.com/search/");
         StringBuffer urlText;
         String name = "";
-        postPrintList(refrigeratorDao.findAll(), attr);
+        //postPrintList(refrigeratorDao.findAll(), attr);
         if (selectGoods != null) {
-            name = jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[0]).get(0).get("name")
-                    .toString();
+            name = refrigeratorDao.findById(selectGoods[0]).get(0).getName();
             url.append(name);
             urlText = new StringBuffer(name);
             for (int i = 1; i < selectGoods.length; i++) {
-                name = jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[i]).get(0)
-                        .get("name").toString();
+                name = refrigeratorDao.findById(selectGoods[i]).get(0).getName();
                 url.append("%20");
                 url.append(name);
                 urlText.append(",");
@@ -157,7 +141,6 @@ public class MainController {
             return "redirect:/input";
         } else {
             refrigeratorDao.insertGoods(name, date);
-            postPrintList(refrigeratorDao.findAll(), attr);
             return "redirect:/top";
         }
     }
@@ -177,13 +160,13 @@ public class MainController {
         }
     }
 
-    public void getPrintList(List<Map<String, Object>> list, Model model) {
+    public void getPrintList(List<Refrigerator> list, Model model) {
         List<Goods> goods = new ArrayList<Goods>();
         for (int i = 0; i < list.size(); i++) {
-            int id = Integer.parseInt(list.get(i).get("id").toString());
-            String name = list.get(i).get("name").toString();
-            String limit = list.get(i).get("limitDay").toString();
-            LocalDate limitDay = LocalDate.parse(limit);
+            int id = list.get(i).getId();
+            String name = list.get(i).getName();
+            String limit = list.get(i).getLimitDay().toString();
+            LocalDate limitDay = list.get(i).getLimitDay();
             LocalDate today = LocalDate.now();
             int state = 0;
             if (limitDay.minusDays(1).equals(today)) {
@@ -202,13 +185,13 @@ public class MainController {
         model.addAttribute("goodslist", goods);
     }
 
-    public void postPrintList(List<Map<String, Object>> list, RedirectAttributes attr) {
+    /*public void postPrintList(List<Refrigerator> list, RedirectAttributes attr) {
         List<Goods> goods = new ArrayList<Goods>();
         for (int i = 0; i < list.size(); i++) {
-            int id = Integer.parseInt(list.get(i).get("id").toString());
-            String name = list.get(i).get("name").toString();
-            String limit = list.get(i).get("limitDay").toString();
-            LocalDate limitDay = LocalDate.parse(limit);
+            int id = list.get(i).getId();
+            String name = list.get(i).getName();
+            String limit = list.get(i).getLimitDay().toString();
+            LocalDate limitDay = list.get(i).getLimitDay();
             LocalDate today = LocalDate.now();
             int state = 0;
             if (limitDay.minusDays(1).equals(today)) {
@@ -224,5 +207,5 @@ public class MainController {
         }
 
         attr.addFlashAttribute("goodslist", goods);
-    }
+    }*/
 }
