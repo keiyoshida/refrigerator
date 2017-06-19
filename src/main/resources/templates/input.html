@@ -15,32 +15,82 @@
     <![endif]-->
   </head>
 
-  <body>
-    <div align="center">
-      <h1>購入商品入力画面</h1>
-      <p><img src="/icon.png" /></p>
-      <form method="post" th:action="@{/type}">
-        <p><label>種別:</label>
-        <select class="form-control" name="type" style="width:300" onChange="this.form.submit()" >
-          <option value="meet" th:selected="${select1} == true">生肉</option>
-          <option value="fish" th:selected="${select2} == true">魚</option>
-          <option value="vegetable" th:selected="${select3} == true">野菜</option>
-          <option value="egg" th:selected="${select4} == true">卵</option>
-          <option value="milk" th:selected="${select5} == true">牛乳</option>
-          <option value="other" th:selected="${select6} == true">その他</option>
-        </select></p>
-      </form>
-      <div class="container" >
-        <form method="post" th:action="@{/addGoods}">
-          <p><label>商品名:</label><input class="form-control" type="text" name="name" th:value="${goodsName}" style="width:300" /></p>
-          <p><label>参考消費期限:</label><input class="form-control" type="date" name="date" th:value="${limit}" style="width:300" /></p>
-          <p><input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="入力完了" /></p>
-          <p><sapn style="color:#FF0000;" th:text="${alert}" /></p>
-        </form>
+  <body style="padding-top:70px;">
+    <div class="container" >
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a href="/top" class="navbar-brand">Refrigerator</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="/top" ><span class="glyphicon glyphicon-home"></span> Home</a></li>
+            <li class="active" ><a href="/input" ><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Input</a></li>
+            <li><a href="/search" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div align="center">
+        <div class="jumbotron text-center" style="background:url(headerImage.jpg); background-size:cover; color: #ffffff; text-shadow: 0 -1px 1px #FFF, -1px 0 1px #FFF, 1px 0 1px #FFF, 0 1px 1px #FFF, 1px 1px 1px #000, 2px 2px 2px #000, 3px 3px 3px #000;" >
+          <div style="background-color: rgba(128, 128, 128, 0.3);" >
+            <h1>冷蔵庫管理アプリケーション</h1>
+            <p>いつでも見守る冷蔵庫</p>
+          </div>
+        </div>
+        <p><img src="/icon.png" /></p>
       </div>
-      <form method="post" th:action="@{/returnTop}">
-        <input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="Top" />
+      <div class="row" >
+        <div class="col-md-offset-2 col-md-8" >
+          <h2 class="page-header" >購入商品入力画面</h2>
+        </div>
+      </div>
+      <form method="post" th:action="@{/type}">
+        <div class="row">
+          <div class="col-md-offset-4 col-md-4">
+            <p class="bg-info"><label style="font-size:15px;">種別:</label></p>
+          </div>
+        </div>
+          <div class="row">
+            <div class="col-md-offset-4 col-md-4">
+              <p><select class="form-control" name="type" onChange="this.form.submit()" >
+                <option value="meet" th:selected="${select1} == true">生肉</option>
+                <option value="fish" th:selected="${select2} == true">魚</option>
+                <option value="vegetable" th:selected="${select3} == true">野菜</option>
+                <option value="egg" th:selected="${select4} == true">卵</option>
+                <option value="milk" th:selected="${select5} == true">牛乳</option>
+                <option value="other" th:selected="${select6} == true">その他</option>
+              </select></p>
+            </div>
+          </div>
       </form>
+      <form method="post" th:action="@{/addGoods}">
+        <div class="row">
+          <div class="col-md-offset-4 col-md-4">
+            <p class="bg-info"><label style="font-size:15px;">商品名:</label></p>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-offset-4 col-md-4" >
+            <p><input class="form-control" type="text" name="name" th:value="${goodsName}" /></p>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-offset-4 col-md-4" >
+            <p class="bg-info"><label style="font-size:15px;">参考消費期限:</label></p>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-offset-4 col-md-4" >
+            <p><input class="form-control" type="date" name="date" th:value="${limit}" /></p>
+          </div>
+        </div>
+        <div align="center" ><p><sapn style="color:#FF0000;" th:text="${alert}" /></p></div>
+        <div class="row" >
+          <p><input type="submit" class="btn btn-primary col-md-offset-4 col-md-4" style="HEIGHT: 40px;" value="入力完了" /></p>
+        </div>
+      </form>
+      <!-- <form method="post" th:action="@{/returnTop}">
+        <input type="submit" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" value="Top" />
+      </form> -->
     </div>
     <script
         src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
