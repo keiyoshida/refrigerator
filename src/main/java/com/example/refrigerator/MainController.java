@@ -92,12 +92,12 @@ public class MainController {
         String name = "";
         postPrintList(refrigeratorDao.findAll(), attr);
         if (selectGoods != null) {
-            name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[0])).get(0).get("name")
+            name = jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[0]).get(0).get("name")
                     .toString();
             url.append(name);
             urlText = new StringBuffer(name);
             for (int i = 1; i < selectGoods.length; i++) {
-                name = (jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[i])).get(0)
+                name = jdbc.queryForList("SELECT name FROM refrigerator WHERE id = ?", selectGoods[i]).get(0)
                         .get("name").toString();
                 url.append("%20");
                 url.append(name);
@@ -180,9 +180,9 @@ public class MainController {
     public void getPrintList(List<Map<String, Object>> list, Model model) {
         List<Goods> goods = new ArrayList<Goods>();
         for (int i = 0; i < list.size(); i++) {
-            int id = Integer.parseInt(((list.get(i)).get("id").toString()));
-            String name = (list.get(i)).get("name").toString();
-            String limit = ((list.get(i).get("limitDay")).toString());
+            int id = Integer.parseInt(list.get(i).get("id").toString());
+            String name = list.get(i).get("name").toString();
+            String limit = list.get(i).get("limitDay").toString();
             LocalDate limitDay = LocalDate.parse(limit);
             LocalDate today = LocalDate.now();
             int state = 0;
@@ -205,9 +205,9 @@ public class MainController {
     public void postPrintList(List<Map<String, Object>> list, RedirectAttributes attr) {
         List<Goods> goods = new ArrayList<Goods>();
         for (int i = 0; i < list.size(); i++) {
-            int id = Integer.parseInt(((list.get(i)).get("id").toString()));
-            String name = (list.get(i)).get("name").toString();
-            String limit = ((list.get(i).get("limitDay")).toString());
+            int id = Integer.parseInt(list.get(i).get("id").toString());
+            String name = list.get(i).get("name").toString();
+            String limit = list.get(i).get("limitDay").toString();
             LocalDate limitDay = LocalDate.parse(limit);
             LocalDate today = LocalDate.now();
             int state = 0;
