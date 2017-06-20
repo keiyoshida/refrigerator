@@ -167,8 +167,7 @@ public class MainController {
 
     @PostMapping("/graphTable:{date}")
     public String graphTable(@PathVariable String date,RedirectAttributes attr){
-        List<OverLimitData> list = new ArrayList<OverLimitData>();
-        list = overLimitDataDao.findByDate(date.split("-")[0], date.split("-")[1]);
+        List<OverLimitData> list = overLimitDataDao.findByDate(date.split("-")[0], date.split("-")[1]);
         attr.addFlashAttribute("graphTable", list);
         return "redirect:graph";
     }
