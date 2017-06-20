@@ -173,14 +173,14 @@ public class MainController {
     }
 
     public void printImage(List<Goods> goods, Model model) {
-        int count = 0;
+        boolean flag = false;
         for (int i = 0; i < goods.size(); i++) {
             if (goods.get(i).getLimitDay().compareTo(goods.get(i).getToday()) < 0) {
-                count++;
+                flag = true;
             }
         }
 
-        if (count > 0) {
+        if (flag) {
             model.addAttribute("path", "bad.png");
         } else {
             model.addAttribute("path", "normal.png");
