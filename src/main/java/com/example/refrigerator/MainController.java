@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,16 +56,12 @@ public class MainController {
             if(month.length() == 1){
                 month = "0" + month;
             }
-            List<CountData> list = overLimitDataDao.countData(year, month);
+            List<OverLimitData> list = overLimitDataDao.findByDate(year, month);
             graph.add(new Graph(year+"-"+month, list.size()));
         }
+        model.addAttribute("sum", overLimitDataDao.findAll().size());
         model.addAttribute("list", graph);
         return "graph";
-    }
-
-    @PostMapping("/returnTop")
-    public String returnTop(){
-        return "redirect:/top";
     }
 
     @PostMapping("/in")
@@ -166,6 +163,14 @@ public class MainController {
             refrigeratorDao.insertGoods(name, date);
             return "redirect:/top";
         }
+    }
+
+    @PostMapping("/graphTable:{date}")
+    public String graphTable(@PathVariable String date,RedirectAttributes attr){
+        List<OverLimitData> list = new ArrayList<OverLimitData>();
+        list = overLimitDataDao.findByDate(date.split("-")[0], date.split("-")[1]);
+        attr.addFlashAttribute("graphTable", list);
+        return "redirect:graph";
     }
 
     public void printImage(List<Goods> goods, Model model) {

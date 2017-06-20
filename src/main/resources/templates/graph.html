@@ -40,8 +40,14 @@
       chart.render();
 
       function onClick(e){
-          alert(e.dataPointIndex);
-        }
+    	  document.selectDate.action = "/graphTable:" + countData[e.dataPointIndex]["label"];
+    	  document.selectDate.submit();
+      }
+
+      var table = document.getElementById("dustBox");
+      if(table.rows.length > 1){
+        table.style.display = '';
+      }
     }
     /*]]>*/
     </script>
@@ -63,9 +69,10 @@
             <a href="/top" class="navbar-brand">Refrigerator</a>
           </div>
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/top" ><span class="glyphicon glyphicon-home"></span> Home</a></li>
+            <li><a href="/top" ><span class="glyphicon glyphicon-home"></span> Home</a></li>
             <li><a href="/input" ><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Input</a></li>
             <li><a href="/search" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a></li>
+            <li class="active"><a href="/graph" ><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Graph</a></li>
           </ul>
         </div>
       </nav>
@@ -77,9 +84,29 @@
           </div>
         </div>
       </div>
-      <h2 class="page-header" >冷蔵庫の中身</h2>
-    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+      <h2 class="page-header" >これまでの期限切れ商品総数：<span th:text="${sum}" /></h2>
+      <form name="selectDate" method="post" th:action="@{/graphTable}">
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+      </form>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-bordered table-hover sortable" id="dustBox" style="display:none" >
+          <thead>
+            <tr align="center" class="success">
+              <th class="col-md-6 goodsName" >商品名</th>
+              <th class="col-md-6 limitDay" >消費期限</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="graph : ${graphTable}">
+              <td th:text="${graph.name}"></td>
+              <td th:text="${graph.limitDay}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
   <script
     src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script
