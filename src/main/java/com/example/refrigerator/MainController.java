@@ -16,6 +16,9 @@ public class MainController {
 
     @Autowired
     private RefrigeratorDao refrigeratorDao;
+    
+    @Autowired
+    private OverLimitDataDao overLimitDataDao;
 
     // @Value("${app.name}")
     // private String appName;
@@ -42,6 +45,23 @@ public class MainController {
         return "search";
     }
 
+    @GetMapping("/graph")
+    public String graph(Model model) {
+        ArrayList<Graph> graph = new ArrayList<Graph>();
+        for(int i=0;i<12;i++){
+            LocalDate localDate = LocalDate.now().minusMonths(11 - i);
+            String year = String.valueOf(localDate.getYear());
+            String month = String.valueOf(localDate.getMonthValue());
+            if(month.length() == 1){
+                month = "0" + month;
+            }
+            List<CountData> list = overLimitDataDao.countData(year, month);
+            graph.add(new Graph(year+"-"+month, list.size()));
+        }
+        model.addAttribute("list", graph);
+        return "graph";
+    }
+
     @PostMapping("/returnTop")
     public String returnTop(){
         return "redirect:/top";
@@ -57,6 +77,10 @@ public class MainController {
         
         if(selectGoods != null){
             for(int i = 0; i < selectGoods.length; i++) {
+                List<Refrigerator> goods = refrigeratorDao.findById(selectGoods[i]);
+                if(goods.get(0).getLimitDay().compareTo(LocalDate.now()) < 0){
+                    overLimitDataDao.insertData(goods.get(0).getName(), goods.get(0).getLimitDay().toString());
+                }
                 refrigeratorDao.deleteById(selectGoods[i]);
             }
         } else{
@@ -76,7 +100,6 @@ public class MainController {
         StringBuffer url = new StringBuffer("https://cookpad.com/search/");
         StringBuffer urlText;
         String name = "";
-        //postPrintList(refrigeratorDao.findAll(), attr);
         if (selectGoods != null) {
             name = refrigeratorDao.findById(selectGoods[0]).get(0).getName();
             url.append(name);
@@ -184,28 +207,4 @@ public class MainController {
         printImage(goods, model);
         model.addAttribute("goodslist", goods);
     }
-
-    /*public void postPrintList(List<Refrigerator> list, RedirectAttributes attr) {
-        List<Goods> goods = new ArrayList<Goods>();
-        for (int i = 0; i < list.size(); i++) {
-            int id = list.get(i).getId();
-            String name = list.get(i).getName();
-            String limit = list.get(i).getLimitDay().toString();
-            LocalDate limitDay = list.get(i).getLimitDay();
-            LocalDate today = LocalDate.now();
-            int state = 0;
-            if (limitDay.minusDays(1).equals(today)) {
-                state = 1;
-            } else if (limitDay.equals(today)) {
-                state = 2;
-            } else if (limitDay.compareTo(today) < 0) {
-                state = 3;
-            } else {
-                state = 0;
-            }
-            goods.add(new Goods(id, name, limit, limitDay, state));
-        }
-
-        attr.addFlashAttribute("goodslist", goods);
-    }*/
 }
