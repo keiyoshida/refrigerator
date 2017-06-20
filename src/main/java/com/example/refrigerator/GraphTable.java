@@ -5,9 +5,13 @@ import java.time.LocalDate;
 import lombok.Data;
 
 @Data
-public class CountData {
+public class GraphTable {
 
-    private int id;
     private String name;
     private LocalDate limitDay;
+    
+    public GraphTable(String name, LocalDate limitDay){
+        this.name = name;
+        this.limitDay = limitDay;
+    }
 }

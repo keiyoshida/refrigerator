@@ -21,8 +21,8 @@ public class OverLimitDataDao {
         jdbc.update("INSERT INTO overlimitdata (name, limitDay) VALUES (?, to_date(?, 'yyyy/MM/dd'))", name, date);
     }
 
-    public List<CountData> countData(String year, String month){
+    public List<OverLimitData> findByDate(String year, String month){
         String keyword = year + "-" + month + "%";
-        return jdbc.query("SELECT * FROM overlimitdata WHERE limitDay LIKE ?", new BeanPropertyRowMapper<>(CountData.class), keyword);
+        return jdbc.query("SELECT * FROM overlimitdata WHERE limitDay LIKE ?", new BeanPropertyRowMapper<>(OverLimitData.class), keyword);
     }
 }
