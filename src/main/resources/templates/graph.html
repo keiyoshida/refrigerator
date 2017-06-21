@@ -40,8 +40,8 @@
       chart.render();
 
       function onClick(e){
-    	  document.selectDate.action = "/graphTable:" + countData[e.dataPointIndex]["label"];
-    	  document.selectDate.submit();
+        document.selectDate.action = "/graphTable:" + countData[e.dataPointIndex]["label"];
+        document.selectDate.submit();
       }
 
       var table = document.getElementById("dustBox");
@@ -61,9 +61,9 @@
 
   </head>
 
-  <body style="padding-top:70px;">
+  <body>
     <div class="container" >
-      <nav class="navbar navbar-default navbar-fixed-top">
+      <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
             <a href="/top" class="navbar-brand">Refrigerator</a>
@@ -89,12 +89,12 @@
         <div id="chartContainer" style="height: 300px; width: 100%;"></div>
       </form>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-xs-12 col-sm-12 col-md-12">
         <table class="table table-bordered table-hover sortable" id="dustBox" style="display:none" >
           <thead>
             <tr align="center" class="success">
-              <th class="col-md-6 goodsName" >商品名</th>
-              <th class="col-md-6 limitDay" >消費期限</th>
+              <th class="col-xs-6 col-sm-6 col-md-6 goodsName" >商品名</th>
+              <th class="col-xs-6 col-sm-6 col-md-6 limitDay" >消費期限</th>
             </tr>
           </thead>
           <tbody>
