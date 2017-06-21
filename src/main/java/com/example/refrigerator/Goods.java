@@ -4,21 +4,17 @@ import java.time.LocalDate;
 
 public class Goods {
 
-    private final int id;
-    private final String name;
-    private final String limit;
-    private final LocalDate today;
-    private final LocalDate limitDay;
-    private final int state;
+    private final int id;               // 商品id
+    private final String name;          // 商品名
+    private final LocalDate limitDay;   // 消費期限
+    private final int state;            // 商品の状態 1:期限前日 2:期限当日 3:期限切れ 0:その他
     
-    public Goods(int id, String name, String limit, LocalDate limitDay, int state){
+    public Goods(int id, String name, LocalDate limitDay, int state){
         
         this.id = id;
         this.name = name;
-        this.limit = limit;
         this.limitDay = limitDay;
         this.state = state;
-        this.today = LocalDate.now();
     }
     
     public int getId(){
@@ -27,14 +23,6 @@ public class Goods {
     
     public String getName(){
         return name;
-    }
-    
-    public String getLimit(){
-        return limit;
-    }
-    
-    public LocalDate getToday(){
-        return today;
     }
     
     public LocalDate getLimitDay(){

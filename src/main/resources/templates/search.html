@@ -18,6 +18,7 @@
 
   <body>
     <div class="container" >
+<!-- ========================== ページ上段　ナビゲーションバー表示  ========================== -->
       <nav class="navbar navbar-default">
         <div class="container">
         <div class="navbar-header">
@@ -39,6 +40,7 @@
           </div>
         </div>
         </div>
+<!-- ========================== ページ中段　レシピ検索用テーブル表示  ========================== -->
       <h2 class="page-header" >レシピ検索画面</h2>
       <form method="post" th:action="@{/selectSearch}">
       <div class="row" >
@@ -58,10 +60,10 @@
                 </td>
                 <td th:text="${goods.name}"></td>
                 <div th:switch="${goods.state}">
-                  <td th:case="1" bgcolor="Yellow" th:text="${goods.limit}"></td>
-                  <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
-                  <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
-                  <td th:case="*" th:text="${goods.limit}"></td>
+                  <td th:case="1" bgcolor="Yellow" th:text="${goods.limitDay}"></td>
+                  <td th:case="2" bgcolor="Orange" th:text="${goods.limitDay}"></td>
+                  <td th:case="3" bgcolor="Red" th:text="${goods.limitDay}"></td>
+                  <td th:case="*" th:text="${goods.limitDay}"></td>
                 </div>
               </tr>
             </tbody>
@@ -69,8 +71,11 @@
         </div>
       </div>
       <div align="center" >
+<!-- ========================== ページ下段　「urlを作成」ボタン不備時アラート文表示  ========================== -->
         <p><span style="color:#FF0000;" th:text="${alert}" ></span></p>
+<!-- ========================== ページ下段　「urlを作成」ボタン 作成したurl表示  ========================== -->
         <p><a target="_blank" th:href="${url}" ><span th:text="${urlText}"></span></a></p>
+<!-- ========================== ページ下段　「urlを作成」ボタン表示  ========================== -->
         <p><input type="submit" value="URLを作成" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></p>
       </div>
     </form>

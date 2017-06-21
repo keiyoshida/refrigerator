@@ -20,6 +20,7 @@
 
   <body>
     <div class="container" >
+<!-- ========================== ページ上段　ナビゲーションバー表示  ========================== -->
       <nav class="navbar navbar-default" >
         <div class="container" >
           <div class="navbar-header" >
@@ -40,8 +41,10 @@
             <p>いつでも見守る冷蔵庫</p>
           </div>
         </div>
+<!-- ========================== ページ中段　商品状態画像表示  ========================== -->
         <img th:src="${path}" class="img-responsive" width="50%" height="50%" />
       </div>
+<!-- ========================== ページ中段　商品情報テーブル表示  ========================== -->
       <h2 class="page-header" >冷蔵庫の中身</h2>
       <h3><span style="color:#FF0000;" th:text="${alertGoods}" ></span></h3>
       <form method="post" th:action="@{/out}">
@@ -63,19 +66,21 @@
                 </td>
                 <td th:text="${goods.name}"></td>
                 <div th:switch="${goods.state}">
-                  <td th:case="1" bgcolor="Yellow" th:text="${goods.limit}"></td>
-                  <td th:case="2" bgcolor="Orange" th:text="${goods.limit}"></td>
-                  <td th:case="3" bgcolor="Red" th:text="${goods.limit}"></td>
-                  <td th:case="*" th:text="${goods.limit}"></td>
+                  <td th:case="1" bgcolor="Yellow" th:text="${goods.limitDay}"></td>
+                  <td th:case="2" bgcolor="Orange" th:text="${goods.limitDay}"></td>
+                  <td th:case="3" bgcolor="Red" th:text="${goods.limitDay}"></td>
+                  <td th:case="*" th:text="${goods.limitDay}"></td>
                 </div>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+<!-- ========================== ページ下段　「取り出し」不備時アラート文表示  ========================== -->
       <div align="center">
         <p><span style="color:#FF0000;" th:text="${alert}"></span></p>
       </div>
+<!-- ========================== ページ下段　「取り出し」ボタン表示  ========================== -->
       <div class="row" >
         <input type="submit" value="取り出し" class="btn btn-primary col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-xs-4 col-sm-4 col-md-4" style="HEIGHT:40px;" />
       </div>

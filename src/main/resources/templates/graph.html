@@ -13,9 +13,10 @@
     /*<![CDATA[*/
 
     window.onload = function () {
-      var countData = /*[[${list}]]*/ [];
-      var graphData = [];
+      var countData = /*[[${list}]]*/ [];       // server側からリストを受け取る
+      var graphData = [];                       // graph表示データ挿入用配列
 
+      // server側から受け取ったリストをChart.jsで使用できる形式に変更
       for(var i=0;i<countData.length;i++){
         var data = new Object;
         data.label = countData[i]["label"];
@@ -24,6 +25,8 @@
         data.click = onClick;
         graphData.push(data);
       }
+
+      // graph表示部分
       var chart = new CanvasJS.Chart("chartContainer",
       {
         title:{
@@ -39,11 +42,13 @@
 
       chart.render();
 
+      // graphクリック時の処理　selectDateをsubmitする。
       function onClick(e){
-        document.selectDate.action = "/graphTable:" + countData[e.dataPointIndex]["label"];
+        document.selectDate.action = "/graphTable/" + countData[e.dataPointIndex]["label"];
         document.selectDate.submit();
       }
 
+      // テーブルに商品一覧の情報が入力されていればテーブルを表示する。
       var table = document.getElementById("dustBox");
       if(table.rows.length > 1){
         table.style.display = '';
@@ -63,6 +68,7 @@
 
   <body>
     <div class="container" >
+<!-- ========================== ページ上段　ナビゲーションバー表示  ========================== -->
       <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
@@ -84,10 +90,12 @@
           </div>
         </div>
       </div>
+<!-- ========================== ページ中段　期限切れ商品総数と月別商品数グラフ表示  ========================== -->
       <h2 class="page-header" >これまでの期限切れ商品総数：<span th:text="${sum}" /></h2>
       <form name="selectDate" method="post" th:action="@{/graphTable}">
         <div id="chartContainer" style="height: 300px; width: 100%;"></div>
       </form>
+<!-- ========================== ページ下段　月別期限切れ商品一覧テーブル表示  ========================== -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12">
         <table class="table table-bordered table-hover sortable" id="dustBox" style="display:none" >
