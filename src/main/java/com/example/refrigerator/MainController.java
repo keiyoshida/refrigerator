@@ -17,7 +17,7 @@ public class MainController {
 
     @Autowired
     private RefrigeratorDao refrigeratorDao;
-    
+
     @Autowired
     private OverLimitDataDao overLimitDataDao;
 
@@ -25,9 +25,9 @@ public class MainController {
     // private String appName;
 
     /**
-     * (/top)にアクセスしたときにトップ画面を表示する。
+     * [/top]にアクセスしたときにトップ画面を表示する。
      * @param model
-     * @return
+     * @return topページを返す。
      */
     @GetMapping("/top")
     public String top(Model model) {
@@ -109,6 +109,8 @@ public class MainController {
                 urlText.append(name);
             }
             attr.addFlashAttribute("urlText", urlText + "を使ったレシピ");
+        } else{
+            attr.addFlashAttribute("alert", "レシピ検索をしたい商品を選択してください。");
         }
         attr.addFlashAttribute("url", url);
         return "redirect:/search";
@@ -181,12 +183,20 @@ public class MainController {
         }
 
         if (flag) {
+            model.addAttribute("alertGoods", "期限切れの商品があります。");
             model.addAttribute("path", "bad.png");
         } else {
             model.addAttribute("path", "normal.png");
         }
     }
 
+    /**
+     * refrigeratorテーブル内のデータをhtmlに渡す。
+     * <p>
+     * goodsリストにデータベース内の各商品情報を挿入する。
+     * @param list
+     * @param model
+     */
     public void getPrintList(List<Refrigerator> list, Model model) {
         List<Goods> goods = new ArrayList<Goods>();
         for (int i = 0; i < list.size(); i++) {
