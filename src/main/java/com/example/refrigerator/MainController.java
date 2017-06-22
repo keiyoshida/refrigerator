@@ -180,26 +180,9 @@ public class MainController {
     @PostMapping("/graphTable/{date}")
     public String graphTable(@PathVariable String date, RedirectAttributes attr){
         List<OverLimitData> list = overLimitDataDao.findByDate(date.split("-")[0], date.split("-")[1]);
+        attr.addFlashAttribute("target", "target");
         attr.addFlashAttribute("graphTable", list);
         return "redirect:/graph";
-    }
-
-    // top画面　画像表示用メソッド
-    // 商品情報の入ったリストを引数にとり、消費期限切れの商品があった場合には画像を変更しアラート文を表示する。
-    public void printImage(List<Goods> goods, Model model) {
-        boolean flag = false;
-        for (int i = 0; i < goods.size(); i++) {
-            if (goods.get(i).getState() == 3) {
-                flag = true;
-            }
-        }
-
-        if (flag) {
-            model.addAttribute("alertGoods", "期限切れの商品があります。");
-            model.addAttribute("path", "bad.png");
-        } else {
-            model.addAttribute("path", "normal.png");
-        }
     }
 
     // 商品リスト表示用のメソッド　top画面とsearch画面で使用
@@ -233,7 +216,6 @@ public class MainController {
             goods.add(new Goods(id, name, limitDay, state));
         }
 
-        printImage(goods, model);
         model.addAttribute("goodslist", goods);
     }
 }
