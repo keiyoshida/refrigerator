@@ -210,6 +210,7 @@ public class MainController {
                 state = 2;
             } else if (limitDay.compareTo(today) < 0) {
                 state = 3;
+                model.addAttribute("alertGoods", "期限切れの商品があります。");
             } else {
                 state = 0;
             }

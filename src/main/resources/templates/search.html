@@ -75,8 +75,10 @@
         <p><span style="color:#FF0000;" th:text="${alert}" ></span></p>
 <!-- ========================== ページ下段　「urlを作成」ボタン 作成したurl表示  ========================== -->
         <p><a target="_blank" th:href="${url}" ><span th:text="${urlText}"></span></a></p>
+      </div>
 <!-- ========================== ページ下段　「urlを作成」ボタン表示  ========================== -->
-        <p><input type="submit" value="URLを作成" class="btn btn-primary" style="WIDTH: 300px; HEIGHT: 40px" /></p>
+      <div class="row">
+        <p><input type="submit" value="URLを作成" class="btn btn-primary col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-xs-4 col-sm-4 col-md-4" style="HEIGHT: 40px" /></p>
       </div>
     </form>
     </div>
