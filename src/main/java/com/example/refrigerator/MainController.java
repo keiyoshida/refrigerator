@@ -114,6 +114,7 @@ public class MainController {
         } else{
             attr.addFlashAttribute("alert", "レシピ検索をしたい商品を選択してください。");
         }
+        attr.addFlashAttribute("target", "target");
         attr.addFlashAttribute("url", url);
         return "redirect:/search";
     }
