@@ -16,7 +16,7 @@ public class RefrigeratorDao {
 
     // データベース内の全てのデータを参照する。
     public List<Refrigerator> findAll(){
-        return jdbc.query("SELECT * FROM refrigerator", new BeanPropertyRowMapper<>(Refrigerator.class));
+        return jdbc.query("SELECT * FROM refrigerator ORDER BY limitDay ASC", new BeanPropertyRowMapper<>(Refrigerator.class));
     }
 
     // データベース内のデータをidをもとに参照する。

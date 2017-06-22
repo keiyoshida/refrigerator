@@ -16,7 +16,7 @@ public class OverLimitDataDao {
 
     // データベース内の全てのデータを参照する。
     public List<OverLimitData> findAll(){
-        return jdbc.query("SELECT * FROM overlimitdata", new BeanPropertyRowMapper<>(OverLimitData.class));
+        return jdbc.query("SELECT * FROM overlimitdata ORDER BY limitDay ASC", new BeanPropertyRowMapper<>(OverLimitData.class));
     }
 
     // データベースに新しい商品情報を追加する。
@@ -27,6 +27,6 @@ public class OverLimitDataDao {
     // データベース内のデータを年と月をもとに参照する。
     public List<OverLimitData> findByDate(String year, String month){
         String keyword = year + "-" + month + "%";
-        return jdbc.query("SELECT * FROM overlimitdata WHERE limitDay LIKE ?", new BeanPropertyRowMapper<>(OverLimitData.class), keyword);
+        return jdbc.query("SELECT * FROM overlimitdata WHERE limitDay LIKE ? ORDER BY limitDay ASC", new BeanPropertyRowMapper<>(OverLimitData.class), keyword);
     }
 }
