@@ -8,6 +8,21 @@
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous" />
     <script type="text/javascript" src="sortable/sortable.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+      var remove = function(cell){
+        var table = document.getElementById("refrigerator");
+        for(var i=1;i<table.rows.length;i++){
+          if(table.rows[i].cells[0].children[0].value == cell.id){
+            table.rows[i].cells[0].children[0].checked = "checked";
+          } else {
+            table.rows[i].cells[0].children[0].checked = "";
+          }
+        }
+        document.goodsOut.submit();
+      }
+    /*]]>*/
+    </script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,13 +56,10 @@
             <p>いつでも見守る冷蔵庫</p>
           </div>
         </div>
-<!-- ========================== ページ中段　商品状態画像表示  ========================== -->
-        <img th:src="${path}" class="img-responsive" width="50%" height="50%" />
       </div>
 <!-- ========================== ページ中段　商品情報テーブル表示  ========================== -->
-      <h2 class="page-header" >冷蔵庫の中身</h2>
       <h3><span style="color:#FF0000;" th:text="${alertGoods}" ></span></h3>
-      <form method="post" th:action="@{/out}">
+      <form name="goodsOut" method="post" th:action="@{/out}">
       <p></p>
       <div class="row" >
         <div class="col-xs-12 col-sm-12 col-md-12" >
@@ -66,10 +78,30 @@
                 </td>
                 <td th:text="${goods.name}"></td>
                 <div th:switch="${goods.state}">
-                  <td th:case="1" bgcolor="Yellow" th:text="${goods.limitDay}"></td>
-                  <td th:case="2" bgcolor="Orange" th:text="${goods.limitDay}"></td>
-                  <td th:case="3" bgcolor="Red" th:text="${goods.limitDay}"></td>
-                  <td th:case="*" th:text="${goods.limitDay}"></td>
+                  <td th:case="1" bgcolor="Yellow">
+                    <span th:text="${goods.limitDay}"></span>
+                    <div class="pull-right">
+                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                    </div>
+                  </td>
+                  <td th:case="2" bgcolor="Orange">
+                    <span th:text="${goods.limitDay}"></span>
+                    <div class="pull-right">
+                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                    </div>
+                  </td>
+                  <td th:case="3" bgcolor="Red">
+                    <span th:text="${goods.limitDay}"></span>
+                    <div class="pull-right">
+                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                    </div>
+                  </td>
+                  <td th:case="*" >
+                    <span th:text="${goods.limitDay}"></span>
+                    <div class="pull-right">
+                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                    </div>
+                  </td>
                 </div>
               </tr>
             </tbody>
