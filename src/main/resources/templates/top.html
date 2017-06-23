@@ -10,6 +10,16 @@
     <script type="text/javascript" src="sortable/sortable.js"></script>
     <script th:inline="javascript">
     /*<![CDATA[*/
+      window.onload = function(){
+        var table = document.getElementById("refrigerator");
+        for(var i=1;i<table.rows.length;i++){
+          var element = document.getElementById(table.rows[i].cells[2].children[1].children[0].id);
+          console.log(element);
+          element.addEventListener('touchstart', function(event){
+            remove(this);
+          }, false);
+        }
+      }
       var remove = function(cell){
         var table = document.getElementById("refrigerator");
         for(var i=1;i<table.rows.length;i++){
