@@ -8,3 +8,6 @@ spring:
     url: jdbc:h2:${app.home}\db\${app.name};MODE=PostgreSQL
     username: sa
     password: 
+    
+server:
+  port: 8081
