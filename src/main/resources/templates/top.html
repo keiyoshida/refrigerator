@@ -81,25 +81,25 @@
                   <td th:case="1" bgcolor="Yellow">
                     <span th:text="${goods.limitDay}"></span>
                     <div class="pull-right">
-                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                      <img src="close.png" class="img-responsive" th:id="${goods.id}" onClick="remove(this)" />
                     </div>
                   </td>
                   <td th:case="2" bgcolor="Orange">
                     <span th:text="${goods.limitDay}"></span>
                     <div class="pull-right">
-                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                      <img src="close.png" class="img-responsive" th:id="${goods.id}" onClick="remove(this)" />
                     </div>
                   </td>
                   <td th:case="3" bgcolor="Red">
                     <span th:text="${goods.limitDay}"></span>
                     <div class="pull-right">
-                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                      <img src="close.png" class="img-responsive" th:id="${goods.id}" onClick="remove(this)" />
                     </div>
                   </td>
                   <td th:case="*" >
                     <span th:text="${goods.limitDay}"></span>
                     <div class="pull-right">
-                      <span th:id="${goods.id}" class="glyphicon glyphicon-remove-sign" aria-hidden="true" onClick="remove(this)"></span>
+                      <img src="close.png" class="img-responsive" th:id="${goods.id}" onClick="remove(this)" />
                     </div>
                   </td>
                 </div>
