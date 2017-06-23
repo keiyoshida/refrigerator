@@ -21,9 +21,6 @@ public class MainController {
     @Autowired
     private OverLimitDataDao overLimitDataDao;
 
-    // @Value("${app.name}")
-    // private String appName;
-
     // top画面 printList()でデータベース内の商品情報をhtmlに渡す。
     /**
      * [/top]にアクセスしたときにトップ画面を表示する。
@@ -155,7 +152,7 @@ public class MainController {
     }
 
     // input画面　「入力完了」ボタン処理
-    // 未入力項目や使用不可能な文字が入力されていた場合、アラート文を表示する。
+    // 未入力項目がある場合、アラート文を表示する。
     // 入力に不備がない場合、データベースに商品情報を追加し、topページに遷移する。
     @PostMapping("/addGoods")
     public String addGoods(AddGoodsForm form, RedirectAttributes attr) {
@@ -163,12 +160,9 @@ public class MainController {
         String name = form.getName();
         String date = form.getDate();
         if (name.equals("") != false || date.equals("") != false) {
+            attr.addFlashAttribute("target", "target");
             attr.addFlashAttribute("goodsName", name);
             attr.addFlashAttribute("alert", "未入力項目があります。");
-            return "redirect:/input";
-        } else if (name.indexOf("'") != -1 || name.indexOf('"') != -1 || name.indexOf("=") != -1
-                || name.indexOf("”") != -1 || name.indexOf("’") != -1) {
-            attr.addFlashAttribute("alert", "登録出来ない文字が含まれています。");
             return "redirect:/input";
         } else {
             refrigeratorDao.insertGoods(name, date);
